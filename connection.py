@@ -50,9 +50,15 @@ class Connection(object):
         if user is not None and password is not None:
             self.login(user, password)
 
-    # Using composition and a prefix instead of inheritance allows us to create replacements piece by piece,
-    # yet still allows use of non-replaced methods, without causing any comparability breaks in between.
     def __getattr__(self, name):
+        """[MAGIC]
+        Using composition and a prefix instead of inheritance allows us to create replacements piece by piece,
+        yet still allows use of non-replaced methods, without causing any comparability breaks in between.
+
+        :param name: name of the attribute that is attempted to be got
+        :type name: str
+        :return: :raise AttributeError:
+        """
         if name.startswith("_") and hasattr(self.parent, name[1:]):
             return getattr(self.parent, name[1:])
         else:
