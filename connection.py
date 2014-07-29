@@ -68,6 +68,9 @@ class Connection(object):
         Using composition and a prefix instead of inheritance allows us to create replacements piece by piece,
         yet still allows use of non-replaced methods, without causing any comparability breaks in between.
 
+        To pass-through to a child-method, prefix it with '_'.
+        A side effect of this choice is that we can't name methods this way.
+
         :param name: Name of the attribute that is attempted to be got
         :type name: str
         :return: :raise AttributeError: To be compliant, raised when the mutated attribute isn't found
