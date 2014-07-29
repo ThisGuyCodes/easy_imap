@@ -81,6 +81,14 @@ class Connection(object):
             raise AttributeError
 
     def login(self, user, password):
+        """Authenticate the connection
+
+        :param user: Imap username for login
+        :type user: str
+        :param password: Imap password for login
+        :type password: str
+        :return: A success message, includes username, and the users name
+        """
         ok, value = self._login(user, password)
         _ok(ok)
 
