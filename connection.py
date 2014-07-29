@@ -69,13 +69,13 @@ class Connection(object):
         ok, boxlist = self._list(*args, **kwargs)
         _ok(ok)
 
-        for boxline in boxlist:
-            flags, delimiter, name = _parse_list_response(boxline)
-            thisbox = {
+        for box_line in boxlist:
+            flags, delimiter, name = _parse_list_response(box_line)
+            this_box = {
                 'flags': flags,
-                'delimeter': delimiter
+                'delimiter': delimiter
             }
-            boxes[name] = thisbox
+            boxes[name] = this_box
 
         return boxes
 
@@ -101,9 +101,9 @@ class Connection(object):
             return ids
 
     def fetch(self, nums, *args, **kwargs):
-        numstr = ' '.join(str(n) for n in nums)
+        num_string = ' '.join(str(n) for n in nums)
         command = "(" + " ".join(args) + ")"
-        ok, result = self._fetch(numstr, command, **kwargs)
+        ok, result = self._fetch(num_string, command, **kwargs)
         _ok(ok)
         return result
 
