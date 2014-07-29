@@ -19,6 +19,13 @@ class ReadOnlyException(Exception):
 
 
 def _ok(ok):
+    """Many of the functions in the imap connection class return a tuple with a status and the result.
+    This is a helper function to handle those.
+
+    :param ok: intended to be the first member of the tuples returned by the imap libraries functions
+    :type ok: str
+    :raise BadReturnStatus: raised when ok's value does not indicate the request was processed
+    """
     if ok != "OK":
         raise BadReturnStatus("status was {}".format(ok))
 
