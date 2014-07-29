@@ -1,0 +1,2 @@
+SEEN = "\\Seen"
+READ = SEEN
