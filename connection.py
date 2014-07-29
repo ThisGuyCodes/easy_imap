@@ -29,9 +29,9 @@ def _ok(ok):
     """Many of the functions in the imap connection class return a tuple with a status and the result.
     This is a helper function to handle those.
 
-    :param ok: intended to be the first member of the tuples returned by the imap libraries functions
+    :param ok: Intended to be the first member of the tuples returned by the imap libraries functions
     :type ok: str
-    :raise BadReturnStatus: raised when ok's value does not indicate the request was processed
+    :raise BadReturnStatus: Raised when ok's value does not indicate the request was processed
     """
     if ok != "OK":
         raise BadReturnStatus("status was {}".format(ok))
@@ -39,14 +39,27 @@ def _ok(ok):
 
 class Connection(object):
 
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop("user", None)
-        password = kwargs.pop("password", None)
+    def __init__(self, user=None, password=None, *args, **kwargs):
+        """[MAGIC]
+        Mostly a pass-through to the IMAP4_SSL object, this allows the login to be part of the initial connection.
+
+        :param user: Imap username for login
+        :type user: str or None
+        :param password: Imap password for login
+        :type password: str or None
+        :param args: Pass-through to IMAP4_SSL
+        :type args: list
+        :param kwargs: Pass-through to IMAP4_SSL
+        :type kwargs: dict
+        """
         self.mailbox = 'INBOX'
         self.readonly = False
 
+        # Composition, pass-through the arguments.
+        # Unlike other parts of the library, this will throw an exception if it doesn't work (I think)
         self.parent = IMAP4_SSL(*args, **kwargs)
 
+        # Handle the login if provided
         if user is not None and password is not None:
             self.login(user, password)
 
@@ -55,9 +68,9 @@ class Connection(object):
         Using composition and a prefix instead of inheritance allows us to create replacements piece by piece,
         yet still allows use of non-replaced methods, without causing any comparability breaks in between.
 
-        :param name: name of the attribute that is attempted to be got
+        :param name: Name of the attribute that is attempted to be got
         :type name: str
-        :return: :raise AttributeError:
+        :return: :raise AttributeError: To be compliant, raised when the mutated attribute isn't found
         """
         if name.startswith("_") and hasattr(self.parent, name[1:]):
             return getattr(self.parent, name[1:])
