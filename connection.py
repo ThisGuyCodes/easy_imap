@@ -1,11 +1,18 @@
 from imaplib import IMAP4_SSL
 from re import compile
 
-list_response_pattern = compile(r'\((?P<flags>.*?)\) "(?P<delimiter>.*)" (?P<name>.*)')
+# A regexp for use with the helper function immediately below it
+_list_response_pattern = compile(r'\((?P<flags>.*?)\) "(?P<delimiter>.*)" (?P<name>.*)')
 
 
-def parse_list_response(line):
-    flags, delimiter, mailbox_name = list_response_pattern.match(line).groups()
+def _parse_list_response(line):
+    """A helper function for splitting up the response from the imap list method
+
+    :param line: the string returned by a search in the imap library for each label
+    :type line: str
+    :return: a tuple containing flags on that box, the hierarchy delimiter, and the mailbox's name
+    """
+    flags, delimiter, mailbox_name = _list_response_pattern.match(line).groups()
     mailbox_name = mailbox_name.strip('"')
     return flags, delimiter, mailbox_name
 
@@ -63,7 +70,7 @@ class Connection(object):
         _ok(ok)
 
         for boxline in boxlist:
-            flags, delimiter, name = parse_list_response(boxline)
+            flags, delimiter, name = _parse_list_response(boxline)
             thisbox = {
                 'flags': flags,
                 'delimeter': delimiter
